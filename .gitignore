@@ -4,3 +4,4 @@ venv/
 .env
 dayabay_*_dataset*
 .vscode
+*.pdf
