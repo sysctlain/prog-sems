@@ -104,9 +104,11 @@ def plot(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), t
             #only yerr
 
             (k, b), cov = np.polyfit(x, y, deg=1, w=1/yerr, cov='unscaled')
-            k_err = np.sqrt(cov[0, 0])
-            b_err = np.sqrt(cov[1, 1])
+            k_err, b_err = np.sqrt(np.diag(cov))
 
+            print(ax.get_xlim(), ax.get_ylim())
+            xx = np.arange(*ax.get_xlim())
+            print(xx)
             ax.plot(x, k * x + b, label=rf"МНК: $k=({k:.2f}\pm{k_err:.2f})$, $b=({b:.2f}\pm{b_err:.2f})$", linestyle="--")
         else:
             k, b = np.polyfit(x, y, deg=1)
