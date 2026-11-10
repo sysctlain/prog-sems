@@ -3,7 +3,6 @@ import pandas as pd
 from pandas import Series, DataFrame
 import matplotlib.pyplot as plt
 import seaborn as sns
-import statsmodels as sm
 
 # Не нейрослопный opinionated модуль для лаб и визуализации
 p = plt.rcParams
@@ -18,7 +17,8 @@ p["axes.spines.bottom"] = True
 p["axes.spines.left"] = True
 p["axes.spines.right"] = False
 p["axes.spines.top"] = False
-p["font.sans-serif"] = ["Roboto"]
+p["font.sans-serif"] = ["NewComputerModern", "Adwaita Mono"]
+p["font.monospace"] = [""]
 
 p["axes.grid"] = False
 p["grid.color"] = "black"
@@ -86,11 +86,8 @@ def plot(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), t
     ax.grid(True, which="major", linestyle="--")
 
     if show_zero:
-        ax.set_xlim([0, x.max()])
-        ax.set_ylim([0, y.max()])
-
-    # ax.scatter(x, y, marker='^', c="red", alpha=0.8)
-    print(xerr, yerr)
+        ax.set_xlim([0, x.max()*1.1])
+        ax.set_ylim([0, y.max()*1.1])
 
     errors = (not xerr.empty) and (not yerr.empty)
     if errors:
@@ -101,13 +98,13 @@ def plot(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), t
 
     if linearize:
         if errors:
-            #only yerr
+            #только yerr учитывается
 
             (k, b), cov = np.polyfit(x, y, deg=1, w=1/yerr, cov='unscaled')
-            k_err = np.sqrt(cov[0, 0])
-            b_err = np.sqrt(cov[1, 1])
+            k_err, b_err = np.sqrt(np.diag(cov))
 
-            ax.plot(x, k * x + b, label=rf"МНК: $k=({k:.2f}\pm{k_err:.2f})$, $b=({b:.2f}\pm{b_err:.2f})$", linestyle="--")
+            xx = np.arange(0, ax.get_xlim()[1] + 1)
+            ax.plot(xx, k * xx + b, label=rf"МНК: $k=({k:.2f}\pm{k_err:.2f})$, $b=({b:.2f}\pm{b_err:.2f})$", linestyle="--")
         else:
             k, b = np.polyfit(x, y, deg=1)
             ax.plot(x, k * x + b, label=f"МНК: k={k:.2f}, b={b:.2f}", linestyle="--")
