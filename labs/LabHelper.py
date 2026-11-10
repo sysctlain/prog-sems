@@ -69,14 +69,15 @@ def plot_df(df: DataFrame, **kwargs):
     else:
         raise Exception("Invalid DataFrame provided")
 
-    plot(df[xl], df[yl], xerr=dx, yerr=dy, title=f"{yl}({xl})", xlabel=xl, ylabel=yl, **kwargs)
+    plot2D(df[xl], df[yl], xerr=dx, yerr=dy, title=f"{yl}({xl})", xlabel=xl, ylabel=yl, **kwargs)
 
 
-def plot(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), title="Крутой график", \
+def plot2D(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), title="Крутой график", \
          xlabel=r"$X$", ylabel=r"$Y$", show_zero=False, linearize=True):
     fig, ax = plt.subplots(figsize=(5, 5))
 
     ax.set_title(title)
+    # plt.axis([0,0.25,0,1.3]) # масштабы осей
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -86,8 +87,8 @@ def plot(x: Series, y: Series, xerr:Series = Series(), yerr:Series = Series(), t
     ax.grid(True, which="major", linestyle="--")
 
     if show_zero:
-        ax.set_xlim([0, x.max()*1.1])
-        ax.set_ylim([0, y.max()*1.1])
+        ax.set_xlim([0, x.max()*1.01])
+        ax.set_ylim([0, y.max()*1.01])
 
     errors = (not xerr.empty) and (not yerr.empty)
     if errors:
