@@ -5,3 +5,4 @@ venv/
 dayabay_*_dataset*
 .vscode/
 *.pdf
+__pycache__
